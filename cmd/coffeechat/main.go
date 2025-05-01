@@ -1,7 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+
+	"github.com/SimonKimDev/CoffeeChat/api"
+)
 
 func main() {
-	fmt.Println("Welcome to my CoffeeChat")
+	mux := http.NewServeMux()
+
+	api.RegisterRoutes(mux)
+
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: mux,
+	}
+
+	srv.ListenAndServe()
 }
