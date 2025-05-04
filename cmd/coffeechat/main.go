@@ -1,20 +1,23 @@
 package main
 
 import (
+	adapter "github.com/SimonKimDev/CoffeeChat/internal/adapter/http"
+	"github.com/SimonKimDev/CoffeeChat/internal/application"
+	"log"
 	"net/http"
-
-	"github.com/SimonKimDev/CoffeeChat/api"
 )
 
 func main() {
-	mux := http.NewServeMux()
+	rootMux := http.NewServeMux()
 
-	api.RegisterRoutes(mux)
+	greeter := application.NewGreeterService()
+	adapter.RegisterRoutes(rootMux, greeter)
 
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: mux,
+		Handler: rootMux,
 	}
 
-	srv.ListenAndServe()
+	log.Println("Listening on http://localhost:8080/hello")
+	log.Fatal(srv.ListenAndServe())
 }

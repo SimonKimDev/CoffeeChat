@@ -1,0 +1,13 @@
+environment: "prod"
+server:
+  host: "0.0.0.0"
+  port: "8080"
+database:
+  type: "azuresql"
+  connection_string: "coffeechat-db-connection-prod"
+auth:
+  jwt_secret: "coffeechat-jwt-signing-secret-prod"
+  token_expiry_minutes: 30
+azure:
+  keyvaulturl: "DevelKeyVault"
+  tenant_id: ""
