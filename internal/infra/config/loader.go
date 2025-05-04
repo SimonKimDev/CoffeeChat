@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var tenantId string = "AZURE_TENANT_ID"
+var TenantId string = "AZURE_TENANT_ID"
 
 func Load(path string) (*domain.Config, error) {
 	content, err := os.ReadFile(path)
@@ -24,7 +24,7 @@ func Load(path string) (*domain.Config, error) {
 		return nil, fmt.Errorf("Error: failed to parse config file: %w", err)
 	}
 
-	config.Azure.TenantId, err = getEnv(tenantId)
+	config.Azure.TenantId, err = getEnv(TenantId)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func Load(path string) (*domain.Config, error) {
 func getEnv(key string) (string, error) {
 	value := os.Getenv(key)
 
-	if value != "" {
+	if value == "" {
 		return "", fmt.Errorf("Error: Required Env Var %s is not set", key)
 	}
 

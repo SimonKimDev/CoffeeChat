@@ -10,10 +10,11 @@ build:
 
 run: build
 	./$(BIN_PATH)
-	
+
+test:
+	go test -v ./...
 
 clean:
 	rm -f $(BIN_PATH) 
 
-.PHONY: build run clean
-
+.PHONY: build run clean test

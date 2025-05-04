@@ -7,8 +7,10 @@ type Config struct {
 		Port string `yaml:"port"`
 	} `yaml:"server"`
 	Database struct {
-		Type             string `yaml:"type"`
-		ConnectionString string `yaml:"connection_string"`
+		Type         string `yaml:"type"`
+		DatabaseUrl  string `yaml:"db_url"`
+		DatabaseName string `yaml:"db_name"`
+		Scope        string `yaml:"scope"`
 	} `yaml:"database"`
 	Auth struct {
 		JwtSecret          string `yaml:"jwt_secret"`

@@ -4,10 +4,12 @@ server:
   port: "3000"
 database:
   type: "sqllite"
-  connection_string: "dev.db"
+  db_url: "coffeechat.db"
+  db_name: "local"
+  scope: ""
 auth:
   jwt_secret: "local"
   token_expiry_minutes: 60
 azure: # not used locally
-  keyvaulturl: ""
+  keyvaulturl: "https://develkeyvault.vault.azure.net"
   tnenat_id: ""
