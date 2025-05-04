@@ -1,0 +1,13 @@
+environment: "dev"
+server:
+  host: "localhost"
+  port: "3000"
+database:
+  type: "sqllite"
+  connection_string: "dev.db"
+auth:
+  jwt_secret: "local"
+  token_expiry_minutes: 60
+azure: # not used locally
+  keyvaulturl: ""
+  tnenat_id: ""
