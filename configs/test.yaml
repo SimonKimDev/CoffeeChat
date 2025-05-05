@@ -1,0 +1,16 @@
+##### ONLY FOR UNIT TESTING PURPOSES #####
+environment: "test"
+server:
+  host: "1.2.3.4"
+  port: "567"
+database:
+  driver: "sqllite"
+  db_url_secret_key: "test_connection_string"
+  db_name_secret_key: "test_db"
+  aad_scope: "http://test.com"
+auth:
+  jwt_secret: "test_secret"
+  token_expiry_minutes: 5
+azure:
+  keyvaulturl: "test_keyvault"
+  tenant_id: "12345"
