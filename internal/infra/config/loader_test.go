@@ -38,12 +38,12 @@ func TestLoadConfig_Success(t *testing.T) {
 		t.Errorf("Expected port %q, got %q", expectedPort, cfg.Server.Port)
 	}
 
-	if cfg.Database.Type != expectedDbType {
-		t.Errorf("Expected DB type %q, got %q", expectedDbType, cfg.Database.Type)
+	if cfg.Database.Driver != expectedDbType {
+		t.Errorf("Expected DB type %q, got %q", expectedDbType, cfg.Database.Driver)
 	}
 
-	if cfg.Database.DatabaseUrl != expectedDatabaseUrl {
-		t.Errorf("Expected DB connection string %q, got %q", expectedDatabaseUrl, cfg.Database.DatabaseUrl)
+	if cfg.Database.UrlKeyVaultKey != expectedDatabaseUrl {
+		t.Errorf("Expected DB connection string %q, got %q", expectedDatabaseUrl, cfg.Database.UrlKeyVaultKey)
 	}
 
 	if cfg.Auth.JwtSecret != expectedSecret {

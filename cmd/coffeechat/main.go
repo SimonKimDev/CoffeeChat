@@ -7,11 +7,13 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets"
 	adapter "github.com/SimonKimDev/CoffeeChat/internal/adapter/http"
 	"github.com/SimonKimDev/CoffeeChat/internal/application"
 	"github.com/SimonKimDev/CoffeeChat/internal/infra/auth"
 	"github.com/SimonKimDev/CoffeeChat/internal/infra/config"
 	"github.com/SimonKimDev/CoffeeChat/internal/infra/db"
+	"github.com/SimonKimDev/CoffeeChat/internal/infra/keyvault"
 )
 
 func main() {
@@ -25,12 +27,19 @@ func main() {
 
 	ctx := context.Background()
 
-	cred, err := auth.NewTokenCredential(settings.Env, settings.Azure.TenantId)
-	kvService, err := application.NewKeyVaultService(settings.Azure.KeyVaultUrl, cred)
+	tp, err := auth.NewTokenProvider(settings)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	dbUrl, dbName, err := kvService.GetDbSecrets()
+	kvClient, err := azsecrets.NewClient(settings.Azure.KeyVaultUrl, tp.GetCred(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	db.InitDatabase(ctx, settings.Env, settings.Database.Type, dbUrl, dbName, settings.Database.Scope, cred)
+	dbSecrets := keyvault.NewDBSecretStore(kvClient, settings.Database.UrlKeyVaultKey, settings.Database.NameKeyVaultKey)
+
+	db.InitDatabase(ctx, tp, settings, dbSecrets)
 
 	rootMux := http.NewServeMux()
 

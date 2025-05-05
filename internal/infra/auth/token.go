@@ -2,40 +2,49 @@ package auth
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/SimonKimDev/CoffeeChat/internal/domain"
+	"github.com/SimonKimDev/CoffeeChat/internal/domain/ports"
 )
 
-func NewTokenCredential(env, clientId string) (azcore.TokenCredential, error) {
-	var cred azcore.TokenCredential
-	var err error
-
-	switch env {
-	case "dev":
-		cred, err = azidentity.NewDefaultAzureCredential(nil)
-	case "prod":
-		//cred, err = azidentity.NewManagedIdentityCredential(&azidentity.ManagedIdentityCredentialOptions{
-		//		ID: azidentity.ClientID(clientId),
-		//	})
-		cred, err = azidentity.NewDefaultAzureCredential(nil)
-	}
-
-	if err != nil {
-		return nil, fmt.Errorf("Error: failed to create credential: %v", err)
-	}
-
-	return cred, nil
+type tokenProviderAdapter struct {
+	Cred     azcore.TokenCredential
+	AadScope string
 }
 
-func GetAccessToken(ctx context.Context, scope string, cred azcore.TokenCredential) (azcore.AccessToken, error) {
-	accessToken, err := cred.GetToken(ctx, policy.TokenRequestOptions{Scopes: []string{scope}})
+func Build(settings *domain.Config) (azcore.TokenCredential, error) {
+	switch settings.Env {
+	case "prod":
+		return azidentity.NewDefaultAzureCredential(nil)
+	case "test":
+		return azidentity.NewManagedIdentityCredential(&azidentity.ManagedIdentityCredentialOptions{
+			ID: azidentity.ClientID(settings.Azure.TenantId),
+		})
+	default:
+		return azidentity.NewDefaultAzureCredential(nil)
+	}
+}
+
+func (p tokenProviderAdapter) GetToken(ctx context.Context) (azcore.AccessToken, error) {
+	options := policy.TokenRequestOptions{Scopes: []string{p.AadScope}}
+	return p.Cred.GetToken(ctx, options)
+}
+
+func (p tokenProviderAdapter) GetCred() azcore.TokenCredential {
+	return p.Cred
+}
+
+func NewTokenProvider(settings *domain.Config) (ports.TokenProvider, error) {
+	cred, err := Build(settings)
 	if err != nil {
-		log.Fatalf("Error: failed to get accessToken", err.Error())
+		return nil, err
 	}
 
-	return accessToken, nil
+	return tokenProviderAdapter{
+		cred,
+		settings.Database.AadScope,
+	}, nil
 }

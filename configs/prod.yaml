@@ -3,10 +3,10 @@ server:
   host: "0.0.0.0"
   port: "8080"
 database:
-  type: "azuresql"
-  db_url: "coffeechat-db-connection-prod" # populated from keyvault
-  db_name: "myBlog" # populated from keyvault
-  scope: "https://database.windows.net//.default"
+  driver: "azuresql"
+  db_url_secret_key: "dbconnectionstring" # populated from keyvault
+  db_name_secret_key: "dbcoffeechat" # populated from keyvault
+  aad_scope: "https://database.windows.net//.default"
 auth:
   jwt_secret: "coffeechat-jwt-signing-secret-prod" # populated from keyvault
   token_expiry_minutes: 30

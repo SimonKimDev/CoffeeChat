@@ -3,10 +3,10 @@ server:
   host: "localhost"
   port: "3000"
 database:
-  type: "sqllite"
-  db_url: "coffeechat.db"
-  db_name: "local"
-  scope: ""
+  driver: "sqllite"
+  db_url_secret_key: "coffeechat.db"
+  db_name_secret_key: "local"
+  aad_scope: ""
 auth:
   jwt_secret: "local"
   token_expiry_minutes: 60

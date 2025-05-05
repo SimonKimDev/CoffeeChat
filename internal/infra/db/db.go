@@ -6,29 +6,37 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
-	"github.com/SimonKimDev/CoffeeChat/internal/infra/auth"
-	"github.com/microsoft/go-mssqldb/azuread"
+	"github.com/SimonKimDev/CoffeeChat/internal/domain"
+	"github.com/SimonKimDev/CoffeeChat/internal/domain/ports"
+	_ "github.com/microsoft/go-mssqldb/azuread"
 )
 
 var db *sql.DB
 
-func InitDatabase(ctx context.Context, env, dbType, dbUrl, dbName, scope string, cred azcore.TokenCredential) {
-	var err error
+func InitDatabase(ctx context.Context, cred ports.TokenProvider, settings *domain.Config, secretStore ports.DBSecretProvider) {
 	var conString, driverName string
-	accessToken, err := auth.GetAccessToken(ctx, scope, cred)
+	var err error
 
+	accessToken, err := cred.GetToken(ctx)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	switch env {
+	switch settings.Env {
 	case "dev":
-		conString = dbUrl
-		driverName = dbType
+		conString = settings.Database.Driver
+		driverName = settings.Database.Driver
 	case "prod":
-		conString = fmt.Sprintf("server=%s;database=%s;fedauth=ActiveDirectoryDefault;Token=%s", dbUrl, dbName, accessToken.Token)
-		driverName = azuread.DriverName
+		serverUrl, err := secretStore.ServerUrl(ctx)
+		if err != nil {
+			log.Fatalf("Error: could not retrieve server url", err.Error())
+		}
+		dbName, err := secretStore.DBName(ctx)
+		if err != nil {
+			log.Fatalf("Error: could not retrieve db name", err.Error())
+		}
+		conString = fmt.Sprintf("server=%s;database=%s;fedauth=ActiveDirectoryDefault;Token=%s", serverUrl, dbName, accessToken.Token)
+		driverName = settings.Database.Driver
 	}
 
 	db, err = sql.Open(driverName, conString)
