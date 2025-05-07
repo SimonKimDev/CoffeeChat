@@ -29,11 +29,11 @@ func InitDatabase(ctx context.Context, cred ports.TokenProvider, settings *domai
 	case "prod":
 		serverUrl, err := secretStore.ServerUrl(ctx)
 		if err != nil {
-			log.Fatalf("Error: could not retrieve server url", err.Error())
+			log.Fatal("Error: could not retrieve server url", err.Error())
 		}
 		dbName, err := secretStore.DBName(ctx)
 		if err != nil {
-			log.Fatalf("Error: could not retrieve db name", err.Error())
+			log.Fatal("Error: could not retrieve db name", err.Error())
 		}
 		conString = fmt.Sprintf("server=%s;database=%s;fedauth=ActiveDirectoryDefault;Token=%s", serverUrl, dbName, accessToken.Token)
 		driverName = settings.Database.Driver
