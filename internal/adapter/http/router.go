@@ -13,6 +13,9 @@ func RegisterRoutes(mux *http.ServeMux, greetSvc application.Greeter) http.Handl
 	return mux
 }
 
-func RegisterUserRoutes(mux *http.ServeMux, userSvc application.BlogPoster) http.Handler {
-	handler := New
+func RegisterBlogPostRoutes(mux *http.ServeMux, postSvc application.BlogPoster) http.Handler {
+	handler := NewPostHandler(postSvc)
+
+	mux.HandleFunc("GET /user", handler.post)
+	return mux
 }
