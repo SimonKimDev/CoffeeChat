@@ -17,7 +17,7 @@ type tokenProviderAdapter struct {
 
 func Build(settings *domain.Config) (azcore.TokenCredential, error) {
 	switch settings.Env {
-	case "test":
+	case "dev":
 		return azidentity.NewDefaultAzureCredential(nil)
 	case "prod":
 		return azidentity.NewManagedIdentityCredential(&azidentity.ManagedIdentityCredentialOptions{

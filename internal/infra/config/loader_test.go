@@ -19,7 +19,7 @@ func TestLoadConfig_Success(t *testing.T) {
 	os.Setenv(TenantId, expectedTenantId)
 	defer os.Unsetenv(TenantId)
 
-	path := "../../../configs/test.yaml"
+	path := "./test.yaml"
 	cfg, err := Load(path)
 
 	if err != nil {
@@ -66,7 +66,7 @@ func TestLoadConfig_Success(t *testing.T) {
 func TestLoadConfig_FailsWithoutTenantId(t *testing.T) {
 	os.Unsetenv(TenantId)
 
-	path := "../../../configs/test.yaml"
+	path := "./test.yaml"
 	_, err := Load(path)
 
 	if err == nil {

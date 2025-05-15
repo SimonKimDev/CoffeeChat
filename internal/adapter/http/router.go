@@ -12,3 +12,7 @@ func RegisterRoutes(mux *http.ServeMux, greetSvc application.Greeter) http.Handl
 	mux.HandleFunc("GET /hello", handler.greet)
 	return mux
 }
+
+func RegisterUserRoutes(mux *http.ServeMux, userSvc application.BlogPoster) http.Handler {
+	handler := New
+}
