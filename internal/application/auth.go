@@ -1,8 +1,6 @@
 package application
 
-import (
-	"github.com/SimonKimDev/CoffeeChat/internal/domain/blog"
-)
+import ()
 
 type Authenticater interface{}
 
