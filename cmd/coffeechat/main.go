@@ -39,7 +39,10 @@ func main() {
 	rootMux := http.NewServeMux()
 
 	greeter := application.NewGreeterService()
+	poster := application.NewPostService()
+
 	adapter.RegisterRoutes(rootMux, greeter)
+	adapter.RegisterPostRoutes(rootMux, poster)
 
 	srv := &http.Server{
 		Addr:    ":8080",

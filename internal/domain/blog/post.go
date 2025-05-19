@@ -1,15 +1,18 @@
 package blog
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 type Post struct {
-	PostId        int64 `binding:"required"`
-	AuthorId      int64 `binding:"required"`
-	CategoryId    int
-	Title         string `binding:"required"`
-	Slug          string
-	Summary       string
-	BodyMarkdown  string    `binding:"required"`
-	DatePublished time.Time `binding:"required"`
-	DateUpdated   time.Time
+	PostId        int64          `json:"post_id"`
+	AuthorId      int64          `json:"author_id"`
+	CategoryId    sql.NullInt64  `json:"category_id"`
+	Title         string         `json:"title"`
+	Slug          string         `json:"slug"`
+	Summary       sql.NullString `json:"summary"`
+	BodyMarkdown  string         `json:"body_markdown"`
+	DatePublished time.Time      `json:"date_published"`
+	DateUpdated   time.Time      `json:"date_updated"`
 }
