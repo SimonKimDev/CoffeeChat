@@ -3,13 +3,15 @@ server:
   host: "localhost"
   port: "3000"
 database:
-  driver: "sqllite"
-  db_url_secret_key: "coffeechat.db"
-  db_name_secret_key: "local"
-  aad_scope: ""
+  driver: "postgres"
+  db_url_secret_key: "dbconnectionstring" # populated from keyvault
+  db_name_secret_key: "dbcoffeechat" # populated from keyvault
+  aad_scope: "https://ossrdbms-aad.database.windows.net/.default"
+  ports: 5432
+  db_user_secret_key: "postgresdbuser"
 auth:
   jwt_secret: "local"
   token_expiry_minutes: 60
 azure: # not used locally
   keyvaulturl: "https://develkeyvault.vault.azure.net"
-  tnenat_id: ""
+  tenant_id: "n/a"
