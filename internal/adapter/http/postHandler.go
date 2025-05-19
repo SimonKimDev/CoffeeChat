@@ -40,7 +40,7 @@ func (p *PostHandler) createPost(w http.ResponseWriter, r *http.Request) {
 	err = p.poster.CreatePost(ctx, &post)
 
 	if err != nil {
-		http.Error(w, "failure to create post: DB Error"+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "failure to create post: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
