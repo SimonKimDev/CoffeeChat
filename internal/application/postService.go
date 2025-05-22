@@ -10,6 +10,7 @@ import (
 type BlogPoster interface {
 	CreatePost(context.Context, *blog.Post) error
 	GetAllPost(context.Context) (*[]blog.Post, error)
+	GetPostById(context.Context, int64) (*blog.Post, error)
 }
 
 type postService struct {
@@ -23,8 +24,9 @@ func (*postService) CreatePost(ctx context.Context, post *blog.Post) error {
 	const query = `
         INSERT INTO blog.post(author_id, category_id, title, slug, summary, body_markdown, date_published, date_updated)
         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
-        RETURNING post_id;
-    `
+        RETURNING post_id;`
+
+	// common practice is to use Exec, but postgres doesn't allow LastInsertedId
 	err := db.DB.QueryRowContext(ctx, query,
 		post.AuthorId,
 		post.CategoryId,
@@ -39,9 +41,8 @@ func (*postService) CreatePost(ctx context.Context, post *blog.Post) error {
 }
 
 func (*postService) GetAllPost(ctx context.Context) (*[]blog.Post, error) {
-	const query = `
-        select * from blog.post
-    `
+	// TODO: this needs to be paginated
+	const query = `select * from blog.post`
 
 	rows, err := db.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -64,4 +65,19 @@ func (*postService) GetAllPost(ctx context.Context) (*[]blog.Post, error) {
 	}
 
 	return &posts, nil
+}
+
+func (*postService) GetPostById(ctx context.Context, postId int64) (*blog.Post, error) {
+	const query = `select * from blog.post where post_id = $1`
+
+	row := db.DB.QueryRowContext(ctx, query, postId)
+
+	var post blog.Post
+	err := row.Scan(&post.PostId, &post.AuthorId, &post.CategoryId, &post.Title, &post.Slug, &post.Summary, &post.BodyMarkdown, &post.DatePublished, &post.DateUpdated)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &post, nil
 }

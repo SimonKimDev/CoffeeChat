@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/SimonKimDev/CoffeeChat/internal/application"
@@ -67,6 +68,33 @@ func (p *PostHandler) getPosts(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	err = json.NewEncoder(w).Encode(posts)
+	if err != nil {
+		_ = r.Body.Close()
+		return
+	}
+}
+
+func (p *PostHandler) getPostById(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	idStr := r.PathValue("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		http.Error(w, "failure to parse id from request url:"+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	post, err := p.poster.GetPostById(ctx, id)
+	if err != nil {
+		http.Error(w, "failure to retrieve post: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	err = json.NewEncoder(w).Encode(post)
 	if err != nil {
 		_ = r.Body.Close()
 		return

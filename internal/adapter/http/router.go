@@ -18,5 +18,6 @@ func RegisterPostRoutes(mux *http.ServeMux, postSvc application.BlogPoster) http
 
 	mux.HandleFunc("POST /blogpost", handler.createPost)
 	mux.HandleFunc("GET /blogpost", handler.getPosts)
+	mux.HandleFunc("GET /blogpost/{id}", handler.getPostById)
 	return mux
 }
