@@ -11,6 +11,7 @@ type BlogPoster interface {
 	CreatePost(context.Context, *blog.Post) error
 	GetAllPost(context.Context) (*[]blog.Post, error)
 	GetPostById(context.Context, int64) (*blog.Post, error)
+	UpdatePost(context.Context, *blog.Post) error
 }
 
 type postService struct {
@@ -42,7 +43,7 @@ func (*postService) CreatePost(ctx context.Context, post *blog.Post) error {
 
 func (*postService) GetAllPost(ctx context.Context) (*[]blog.Post, error) {
 	// TODO: this needs to be paginated
-	const query = `select * from blog.post`
+	const query = `SELECT * FROM blog.post`
 
 	rows, err := db.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -68,7 +69,7 @@ func (*postService) GetAllPost(ctx context.Context) (*[]blog.Post, error) {
 }
 
 func (*postService) GetPostById(ctx context.Context, postId int64) (*blog.Post, error) {
-	const query = `select * from blog.post where post_id = $1`
+	const query = `SELECT * FROM blog.post WHERE post_id = $1`
 
 	row := db.DB.QueryRowContext(ctx, query, postId)
 
@@ -80,4 +81,25 @@ func (*postService) GetPostById(ctx context.Context, postId int64) (*blog.Post, 
 	}
 
 	return &post, nil
+}
+
+func (*postService) UpdatePost(ctx context.Context, post *blog.Post) error {
+	const query = `
+        UPDATE blog.post
+        SET
+            category_id = $1,
+            title = $2,
+            summary = $3, 
+            body_markdown = $4,
+            date_updated = NOW()
+        WHERE post_id = $5`
+
+	_, err := db.DB.ExecContext(ctx, query,
+		post.CategoryId,
+		post.Title,
+		post.Summary,
+		post.BodyMarkdown,
+		post.PostId)
+
+	return err
 }
