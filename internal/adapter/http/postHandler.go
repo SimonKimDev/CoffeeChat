@@ -100,3 +100,26 @@ func (p *PostHandler) getPostById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (p *PostHandler) updatePost(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	var post blog.Post
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+
+	err := decoder.Decode(&post)
+	if err != nil {
+		http.Error(w, "invalid JSON: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = p.poster.UpdatePost(ctx, &post)
+
+	if err != nil {
+		http.Error(w, "Failed to update post: "+err.Error(), http.StatusBadRequest)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
