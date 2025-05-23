@@ -1,4 +1,4 @@
-package http
+package handlers
 
 import (
 	"encoding/json"
@@ -14,7 +14,7 @@ func NewGreetingHandler(g application.Greeter) *GreetingHandler {
 	return &GreetingHandler{greeter: g}
 }
 
-func (h *GreetingHandler) greet(w http.ResponseWriter, r *http.Request) {
+func (h *GreetingHandler) Greet(w http.ResponseWriter, r *http.Request) {
 	greeting := h.greeter.Greet()
 	_ = json.NewEncoder(w).Encode(greeting)
 }
