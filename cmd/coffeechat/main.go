@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	adapter "github.com/SimonKimDev/CoffeeChat/internal/adapter/http"
+	"github.com/SimonKimDev/CoffeeChat/internal/api/routes"
 	"github.com/SimonKimDev/CoffeeChat/internal/application"
 	"github.com/SimonKimDev/CoffeeChat/internal/infra/config"
 	"github.com/SimonKimDev/CoffeeChat/internal/infra/db"
@@ -41,8 +41,8 @@ func main() {
 	greeter := application.NewGreeterService()
 	poster := application.NewPostService()
 
-	adapter.RegisterRoutes(rootMux, greeter)
-	adapter.RegisterPostRoutes(rootMux, poster)
+	routes.RegisterRoutes(rootMux, greeter)
+	routes.RegisterPostRoutes(rootMux, poster)
 
 	srv := &http.Server{
 		Addr:    ":8080",

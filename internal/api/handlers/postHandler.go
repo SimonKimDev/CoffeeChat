@@ -1,4 +1,4 @@
-package http
+package handlers
 
 import (
 	"context"
@@ -20,7 +20,7 @@ func NewPostHandler(p application.BlogPoster) *PostHandler {
 	return &PostHandler{poster: p}
 }
 
-func (p *PostHandler) createPost(w http.ResponseWriter, r *http.Request) {
+func (p *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	const maxBody = 1 << 20 // about 1 MB
 	r.Body = http.MaxBytesReader(w, r.Body, maxBody)
 
@@ -54,7 +54,7 @@ func (p *PostHandler) createPost(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Post is Created")
 }
 
-func (p *PostHandler) getPosts(w http.ResponseWriter, r *http.Request) {
+func (p *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 
@@ -74,7 +74,7 @@ func (p *PostHandler) getPosts(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p *PostHandler) getPostById(w http.ResponseWriter, r *http.Request) {
+func (p *PostHandler) GetPostByID(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 
@@ -101,7 +101,7 @@ func (p *PostHandler) getPostById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p *PostHandler) updatePost(w http.ResponseWriter, r *http.Request) {
+func (p *PostHandler) UpdatePost(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 
@@ -124,7 +124,7 @@ func (p *PostHandler) updatePost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (p *PostHandler) deletePostByID(w http.ResponseWriter, r *http.Request) {
+func (p *PostHandler) DeletePostByID(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 
