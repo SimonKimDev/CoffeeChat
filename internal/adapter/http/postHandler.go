@@ -123,3 +123,22 @@ func (p *PostHandler) updatePost(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (p *PostHandler) deletePostByID(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	idStr := r.PathValue("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Failed to parse postid:"+err.Error(), http.StatusBadRequest)
+	}
+
+	err = p.poster.DeletePostByID(ctx, id)
+
+	if err != nil {
+		http.Error(w, "Failed to delete post: "+err.Error(), http.StatusInternalServerError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

@@ -12,6 +12,7 @@ type BlogPoster interface {
 	GetAllPost(context.Context) (*[]blog.Post, error)
 	GetPostById(context.Context, int64) (*blog.Post, error)
 	UpdatePost(context.Context, *blog.Post) error
+	DeletePostByID(context.Context, int64) error
 }
 
 type postService struct {
@@ -100,6 +101,16 @@ func (*postService) UpdatePost(ctx context.Context, post *blog.Post) error {
 		post.Summary,
 		post.BodyMarkdown,
 		post.PostId)
+
+	return err
+}
+
+func (*postService) DeletePostByID(ctx context.Context, postID int64) error {
+	const query = `
+        DELETE FROM blog.post
+        WHERE post_id = $1
+        `
+	_, err := db.DB.ExecContext(ctx, query, postID)
 
 	return err
 }
