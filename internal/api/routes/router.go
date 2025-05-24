@@ -19,6 +19,7 @@ func RegisterPostRoutes(mux *http.ServeMux, postSvc application.BlogPoster) http
 	mux.HandleFunc("POST /blogpost", handler.CreatePost)
 	mux.HandleFunc("GET /blogpost", handler.GetPosts)
 	mux.HandleFunc("GET /blogpost/{id}", handler.GetPostByID)
+	mux.HandleFunc("GET /blogpost/category/{id}", handler.GetPostByCategoryID)
 	mux.HandleFunc("POST /blogpost/update", handler.UpdatePost)
 	mux.HandleFunc("POST /blogpost/delete/{id}", handler.DeletePostByID)
 	return mux

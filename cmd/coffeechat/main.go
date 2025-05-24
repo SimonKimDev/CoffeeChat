@@ -45,7 +45,7 @@ func main() {
 	routes.RegisterPostRoutes(rootMux, poster)
 
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":" + settings.Server.Port,
 		Handler: rootMux,
 	}
 
