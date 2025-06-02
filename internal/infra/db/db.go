@@ -14,6 +14,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// TODO: Avoid global pointer to DB instance. This should be properly dependency injected
 var DB *sql.DB
 var version string = ""
 
