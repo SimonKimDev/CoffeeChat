@@ -38,10 +38,8 @@ func main() {
 
 	rootMux := http.NewServeMux()
 
-	greeter := application.NewGreeterService()
 	poster := application.NewPostService()
 
-	routes.RegisterRoutes(rootMux, greeter)
 	routes.RegisterPostRoutes(rootMux, poster)
 
 	srv := &http.Server{

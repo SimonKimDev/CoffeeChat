@@ -6,13 +6,6 @@ import (
 	"net/http"
 )
 
-func RegisterRoutes(mux *http.ServeMux, greetSvc application.Greeter) http.Handler {
-	handler := handlers.NewGreetingHandler(greetSvc)
-
-	mux.HandleFunc("GET /hello", handler.Greet)
-	return mux
-}
-
 func RegisterPostRoutes(mux *http.ServeMux, postSvc application.BlogPoster) http.Handler {
 	handler := handlers.NewPostHandler(postSvc)
 
