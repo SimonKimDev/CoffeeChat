@@ -1,0 +1,35 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+
+# Test binaries and coverage
+*.test
+*.out
+
+# Go workspace
+go.work
+go.work.sum
+
+# Env / secrets
+.env
+
+# Local data (never commit databases, keys, or chat history)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Wails / frontend (client/, from M8)
+client/build/bin/
+client/frontend/node_modules/
+client/frontend/dist/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
