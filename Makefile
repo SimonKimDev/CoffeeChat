@@ -1,20 +1,23 @@
-APP_NAME := coffeechat 
-MAIN_PATH := ./cmd/$(APP_NAME)
-BIN_PATH := ./bin/$(APP_NAME)
-PGK := ./...
-PORT := 8080
-
+APP_NAME  := coffeechat-server
+MAIN_PATH := ./cmd/server
+BIN_PATH  := ./bin/$(APP_NAME)
 
 build:
 	go build -o $(BIN_PATH) $(MAIN_PATH)
 
 run: build
-	./$(BIN_PATH)
+	$(BIN_PATH)
 
 test:
-	go test -v ./...
+	go test ./...
+
+vet:
+	go vet ./...
+
+tidy:
+	go mod tidy
 
 clean:
-	rm -f $(BIN_PATH) 
+	rm -rf ./bin
 
-.PHONY: build run clean test
+.PHONY: build run test vet tidy clean
