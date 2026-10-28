@@ -41,6 +41,24 @@ docs/                threat model, protocol, deployment
 
 Requires Go 1.24+.
 
+On Windows, use the PowerShell helper (no `make` required):
+
+```powershell
+.\dev.ps1         # list available tasks
+.\dev.ps1 build   # build the relay into .\bin
+.\dev.ps1 run     # build and run the relay
+.\dev.ps1 test    # go test ./...
+.\dev.ps1 vet     # go vet ./...
+.\dev.ps1 check   # build, test, and vet in one command
+.\dev.ps1 clean   # remove build output
+```
+
+The helper also supports `tidy` and can be invoked from any working directory.
+If script execution is disabled, use
+`powershell -ExecutionPolicy Bypass -File .\dev.ps1 check` for a one-off run.
+
+With `make` installed:
+
 ```sh
 make build   # build the relay into ./bin
 make run     # build and run the relay
@@ -68,4 +86,3 @@ The details of each milestone (concepts, exercises, done-when criteria) are in [
 - [ ] **M13** Deploy to a VPS
 
 **Stretch:** safety-number verification, attachments, multi-device, Sender Keys groups, sealed sender, notifications.
-
