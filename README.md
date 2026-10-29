@@ -41,6 +41,12 @@ docs/                threat model, protocol, deployment
 
 Requires Go 1.24+.
 
+The runnable skeleton serves only `GET /healthz` (and `HEAD /healthz`),
+returning `{"status":"ok"}`. It does not yet accept or relay messages.
+It listens on `127.0.0.1:8080` by default; press Ctrl+C to shut down gracefully.
+To choose a different address, run `go run ./cmd/server -addr 127.0.0.1:9090`.
+The health endpoint reports process liveness, not database or messaging readiness.
+
 On Windows, use the PowerShell helper (no `make` required):
 
 ```powershell
